@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DT-WEBSITE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://ohmyfacts.com/wp-content/uploads/2024/04/15-electrifying-facts-about-electricity-you-didnt-know-1714367020.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+      border-radius: 10px;
+      margin-top: 10%;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #news-schedule {
+      display: none; /* Hidden initially */
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+      border-radius: 10px;
+      margin: 10% auto;
+      width: 80%;
+      text-align: center;
+    }
+    .half-page {
+      height: 30vh; /* Adjusted height for better view */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #ccc;
+      background: rgba(0, 0, 0, 0.6); /* Semi-transparent */
+      margin: 10px 0;
+      color: white;
+    }
+    .half-page h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+    .half-page p {
+      font-size: 18px;
+      margin: 0;
+      color: #ddd;
+    }
+    .back-button {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Initial Interface -->
+  <div id="selection-interface" class="container">
+    <h1>Power Cut Tracker</h1>
+
+    <!-- Step 1: Select State -->
+    <div id="state-selection">
+      <label for="state">Select Your State:</label>
+      <select id="state" onchange="showPowerBoards()">
+        <option value="" disabled selected>Select State</option>
+        <option value="state1">UP</option>
+        <option value="state2">HARYANA</option>
+        <!-- Add more states -->
+      </select>
+    </div>
+
+    <!-- Step 2: Select Power Board -->
+    <div id="power-board-selection" style="display: none;">
+      <label for="power-board">Select Your Power Board:</label>
+      <select id="power-board" onchange="showDistricts()">
+        <!-- Dynamic options will be added here -->
+      </select>
+    </div>
+
+    <!-- Step 3: Select District -->
+    <div id="district-selection" style="display: none;">
+      <label for="district">Select Your District:</label>
+      <select id="district">
+        <!-- Dynamic options will be added here -->
+      </select>
+      <button onclick="navigateToDetails()">Submit</button>
+    </div>
+  </div>
+
+  <!-- News and Schedule Interface -->
+  <div id="news-schedule">
+    <div class="half-page">
+      <div>
+        <h1>NEWS</h1>
+        <p>Coming soon...</p>
+      </div>
+    </div>
+    <div class="half-page">
+      <div>
+        <h1>SCHEDULE</h1>
+        <p>Coming soon...</p>
+      </div>
+    </div>
+    <button class="back-button" onclick="goBack()">Go Back</button>
+  </div>
+
+  <script>
+    // Data structure for dynamic options
+    const data = {
+      state1: {
+        powerBoards: ["PVVNL", "MVVNL","DVVNL","Kesco","PuVVNL"],
+        districts: {
+          "PVVNL": ["GHAZIABAD", "MEERUT"],
+          "MVVNL": ["LUCKNOW", "SITAPUR","HARDOI"],
+          "DVVNL": ["AGRA","MATHURA","JHANSI","ALIGARH"],
+          "Kesco": ["KANPUR"],
+          "PuVVNL": ["VARANASI","PRAYAGRAJ","GORAKHPUR","AZAMGARH"]
+
+        }
+      },
+      state2: {
+        powerBoards: ["UHBVN", "DHBVN"],
+        districts: {
+          "UHBVN": ["SONIPAT", "ROHTAK"],
+          "DHBVN": ["GURGAON", "HISAR"],
+          
+        }
+      }
+    };
+
+    function showPowerBoards() {
+      const state = document.getElementById("state").value;
+      const powerBoardSelect = document.getElementById("power-board");
+      powerBoardSelect.innerHTML = '<option value="" disabled selected>Select Power Board</option>';
+      
+      if (state && data[state]) {
+        // Populate power boards for the selected state
+        data[state].powerBoards.forEach(board => {
+          const option = document.createElement("option");
+          option.value = board;
+          option.textContent = board;
+          powerBoardSelect.appendChild(option);
+        });
+        document.getElementById("power-board-selection").style.display = "block";
+      }
+    }
+
+    function showDistricts() {
+      const state = document.getElementById("state").value;
+      const powerBoard = document.getElementById("power-board").value;
+      const districtSelect = document.getElementById("district");
+      districtSelect.innerHTML = '<option value="" disabled selected>Select District</option>';
+      
+      if (state && powerBoard && data[state].districts[powerBoard]) {
+        // Populate districts for the selected power board
+        data[state].districts[powerBoard].forEach(district => {
+          const option = document.createElement("option");
+          option.value = district;
+          option.textContent = district;
+          districtSelect.appendChild(option);
+        });
+        document.getElementById("district-selection").style.display = "block";
+      }
+    }
+
+    function navigateToDetails() {
+      const district = document.getElementById('district').value;
+      if (!district) {
+        alert('Please select a district.');
+        return;
+      }
+
+      // Hide the selection interface
+      document.getElementById('selection-interface').style.display = 'none';
+
+      // Show the news and schedule interface
+      document.getElementById('news-schedule').style.display = 'block';
+    }
+
+    function goBack() {
+      // Hide the news and schedule interface
+      document.getElementById('news-schedule').style.display = 'none';
+
+      // Reset the selection interface and show it
+      document.getElementById('selection-interface').style.display = 'block';
+      document.getElementById('power-board-selection').style.display = 'none';
+      document.getElementById('district-selection').style.display = 'none';
+      document.getElementById('state').value = '';
+      document.getElementById('power-board').value = '';
+      document.getElementById('district').value = '';
+    }
+  </script>
+</body>
+</html>
